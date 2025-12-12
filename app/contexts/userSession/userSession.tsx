@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 import { UserSession, UserSessionInfo } from "../../models/UserSession";
 
 export const UserSessionContext = createContext<UserSession>({ 
-    userSessionInfo: { uuid: null },
+    userSessionInfo: { uuid: null, nickname: null },
     setUserSessionInfo: (_userSessionInfo) => {}
 });
 
