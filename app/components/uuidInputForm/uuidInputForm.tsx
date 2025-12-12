@@ -1,17 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useContext } from "react";
+import { UserSessionContext } from "@/app/contexts/userSession/userSession";
 import UuidInput from "../uuidInput/uuidInput";
 
 export default function UuidInputForm (){
-    const [uuid, setUuid] = useState<string>("");
+    const { setUserSessionInfo } = useContext(UserSessionContext);
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         const form = event.target as HTMLFormElement;
         const input = form.elements[0] as HTMLInputElement;
-        setUuid(input.value);
+        setUserSessionInfo({ uuid: input.value });
     }
   return <form onSubmit={handleSubmit}>
-            <UuidInput setUuid={setUuid} />
+            <UuidInput setUserSessionInfo={setUserSessionInfo} />
         <button type="submit">Save Uuid</button>
     </form>;
 };
