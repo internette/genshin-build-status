@@ -6,11 +6,16 @@ import UuidInput from "../uuidInput/uuidInput";
 export default function UuidInputForm (){
     const { setUserSessionInfo } = useContext(UserSessionContext);
     const [ uuid, setUuid ] = useState<string>("");
-    const handleSubmit = (event: React.FormEvent) => {
+    const getNickname = async (uuid: string): Promise<string> => {
+        const playerInfoResponse = await fetch(`https://enka.network/api/uid/${uuid}/`);
+        const data = await playerInfoResponse.json();
+        const playerInfo = data.playerInfo
+        return playerInfo.nickname;
+    }
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const input = form.elements[0] as HTMLInputElement;
-        setUserSessionInfo({ uuid: input.value, nickname: null });
+        const nickname = await getNickname(uuid);
+        setUserSessionInfo({ uuid: uuid, nickname: nickname });
     }
   return <form onSubmit={handleSubmit}>
             <UuidInput setUuid={setUuid} />
