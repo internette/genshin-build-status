@@ -6,11 +6,18 @@ import UuidInput from "../uuidInput/uuidInput";
 export default function UuidInputForm (){
     const { setUserSessionInfo } = useContext(UserSessionContext);
     const [ uuid, setUuid ] = useState<string>("");
-    const handleSubmit = (event: React.FormEvent) => {
+    const getUsername = async (uuid: string): Promise<string> => {
+        const response = await fetch("/api/playerInfo", {
+            method: "POST",
+            body: JSON.stringify({ uuid })
+        });
+        const playerInfo = await response.json();
+        return playerInfo.username;
+    }
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const input = form.elements[0] as HTMLInputElement;
-        setUserSessionInfo({ uuid: input.value, nickname: null });
+        const username = await getUsername(uuid);
+        setUserSessionInfo({ uuid: uuid, username: username });
     }
   return <form onSubmit={handleSubmit}>
             <UuidInput setUuid={setUuid} />
