@@ -15,12 +15,16 @@ export default function CharacterList() {
                 body: JSON.stringify({ uuid: uuid })
             });
             const data = await response.json();
-            console.log(data);
-            // const { characters } = data;
-            // console.log(characters);
-            // setCharacters(characters);
+            setCharactersSessionInfo({ characters: data.characters });
         };
         fetchCharacters();
-    }, [uuid]);
-    return <div>Character List Component for characters: {characters.length}</div>;
+    }, [uuid, setCharactersSessionInfo]);
+    return <aside>
+        <ul>{characters.map(character => {
+            return <li key={character.avatarId}>
+                <p>{character.name}</p>
+                <img src={character.images.icon} alt={`${character.name} thumbnail.`}/>
+            </li>;
+        })}</ul>
+    </aside>;
 }

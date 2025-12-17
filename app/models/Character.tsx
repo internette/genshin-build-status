@@ -28,5 +28,8 @@ export interface CharacterDetails {
     maxLevel: number,
     stats: Stat[],
     skills: Skill[],
-    weapon: Weapon
+    weapon: Weapon,
+    images: {
+        icon: string
+    }
 }

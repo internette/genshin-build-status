@@ -41,7 +41,10 @@ const getCharacterDetails = async (character) => {
         maxLevel: character.maxLevel,
         stats: allStats,
         skills: allSkills,
-        weapon: characterWeapon
+        weapon: characterWeapon,
+        images: {
+            icon: characterData.icon.url
+        }
     };
     return characterBuild;
 }

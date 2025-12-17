@@ -8,8 +8,8 @@ export default function Home() {
   
   return (
     <>{
-      userSessionInfo.uuid ? 
-      <CharacterList /> :
+      userSessionInfo.uuid ?
+      <><CharacterList /></> :
       <UuidInputForm />
     }</>
   );
