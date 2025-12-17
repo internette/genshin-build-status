@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-// import { AssetFinder } from "enkanetwork.js";
-// const { genshin: genshinAssetFinder } = new AssetFinder();
-import { EnkaClient, CharacterData } from "enka-network-api";
+import { EnkaClient } from "enka-network-api";
 import { Skill, Stat } from "@/app/models/Character";
 const enka = new EnkaClient();
 enka.cachedAssetsManager.cacheDirectoryPath = "./cache";
@@ -21,12 +19,14 @@ const getCharacterDetails = async (character) => {
         };
         return formattedSkill
     });
+    
     const allStats = character.stats.statProperties.map((stats: Stat) => {
         const stat = {};
         const statName = stats.fightPropName.get("en");
         stat[`${statName}`] = (stats.isPercent ? `${Math.floor(stats.value) * 100}%`: Math.floor(stats.value));
         return stat;
     });
+
     const characterWeapon = {
         name: character.weapon.weaponData.name.get("en"),
         id: character.weapon.weaponData.id,
@@ -41,20 +41,21 @@ const getCharacterDetails = async (character) => {
         maxLevel: character.maxLevel,
         stats: allStats,
         skills: allSkills,
-        weapon: characterWeapon
+        weapon: characterWeapon,
+        images: {
+            icon: characterData.icon.url
+        }
     };
     return characterBuild;
 }
 
 export async function POST(request: NextRequest) {
     const { uuid } = await request.json();
-
-    console.log(uuid);
     const { characters } = await enka.fetchUser(uuid);
-    const charactersWithDetails = characters.map(async (character) => {
+    const charactersWithDetails = await Promise.all(characters.map(async (character) => {
         const characterBuild = await getCharacterDetails(character);
         return characterBuild;
-    });
+    }));
 
     return NextResponse.json({ characters: charactersWithDetails });
 }   
