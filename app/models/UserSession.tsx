@@ -7,5 +7,5 @@ export interface UserSession {
 
 export interface UserSessionInfo {
     uuid: string | null,
-    username: string | null
+    nickname: string | null
 }

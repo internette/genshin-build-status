@@ -1,12 +1,23 @@
-import { NextRequest } from "next/server";
-import { Wrapper } from "enkanetwork.js";
-
-// Genshin client and Star Rail client.
-const { genshin } = new Wrapper();
+import { info } from "console";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
     const { uuid } = await request.json();
-    const response = await genshin.getPlayer(parseInt(uuid));
-    const { player } = response;
-    return new Response(JSON.stringify({ playerUsername: player.username }), { status: 200 });
+    if(uuid.length !== 9) {
+        return NextResponse.json({ error: "Invalid UUID" }, { status: 400 });
+    } else {
+        const headers = new Headers({
+            "Accept"       : "application/json",
+            "Content-Type" : "application/json",
+            "User-Agent"   : "GenshinCharacterTracker"
+        });
+        const data = await fetch(`https://enka.network/api/uid/${uuid}?info`, {
+            method: "GET",
+            headers: headers
+        });
+        const { playerInfo } = await data.json();
+        const { nickname, showAvatarInfoList } = playerInfo;
+        return NextResponse.json({ nickname: nickname, characters: showAvatarInfoList
+        });
+    }
 }   
