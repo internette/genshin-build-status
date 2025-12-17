@@ -6,8 +6,9 @@ import { CharacterDetails as CharacterDetailsType } from "../../models/Character
 
 export default function CharacterScreen() {
     const [focusedCharacter, setFocusedCharacter] = useState< CharacterDetailsType | null>(null);  
+    console.log(focusedCharacter);
     return <div>
         <CharacterList setFocusedCharacter={setFocusedCharacter} />
-        <CharacterDetails character={focusedCharacter} />
+        {focusedCharacter && <CharacterDetails character={focusedCharacter} />}
     </div>
 }
